@@ -32,20 +32,20 @@ def clientthread(conn):
 	
 	#Infinite loop so that function do not terminate and thread do not end.
 	while True:
-
+		s1 = "!q"
+		s2 = "!sendall"
 		#Receiving from client
 		data = conn.recv(1024)
-		if data[0:3] == "!q":
-			conn.close()
-		elif data[0:9] == "!sendall":
-			reply = data[9:]
-			conn.sendall(reply)
+		if data[:2] in s1:
+			break
+			#conn.close()
+		elif data[:8] in s2:
+			conn.sendall(data[8:])
 		else:
 			reply = 'OK...' + data
 			if not data:
 				break	
-
-		conn.sendall(reply)
+			conn.sendall(reply)
 
 	#came out of loop
 	conn.close()
@@ -54,10 +54,11 @@ def clientthread(conn):
 while 1:
 	#Wait to accept a connection - blocking call
 	conn, addr = s.accept()
-
+	client_dict = {}
 	#display client information
+	In[]
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
-
+	
 	#start new thread takes 1st argument as a function name to be run,
 	#second is the tuple of arguments to the function.
 	start_new_thread(clientthread ,(conn,))
