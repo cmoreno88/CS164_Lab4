@@ -35,9 +35,15 @@ def clientthread(conn):
 
 		#Receiving from client
 		data = conn.recv(1024)
-		reply = 'OK...' + data
-		if not data:
-			break	
+		if data[0:3] == "!q":
+			conn.close()
+		elif data[0:9] == "!sendall":
+			reply = data[9:]
+			conn.sendall(reply)
+		else:
+			reply = 'OK...' + data
+			if not data:
+				break	
 
 		conn.sendall(reply)
 
