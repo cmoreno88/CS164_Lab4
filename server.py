@@ -5,7 +5,7 @@ import sys
 from thread import *
 
 HOST = ''	#Symbolic name meaning all available interfaces
-PORT = 5093 	#Arbitrary non-privlidged port
+PORT = 5094 	#Arbitrary non-privlidged port
 
 #Creates socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,12 +37,15 @@ def clientthread(conn):
 		s2 = "!sendall"
 		#Receiving from client
 		data = conn.recv(1024)
-		if data[:2] in s1:
+		if data[:2] == s1:
+			print("ifONE")
 			break
 			#conn.close()
-		elif data[:8] in s2:
-			replyAll = "test"#data[8:]
+		elif data[:8] == s2:
+			replyAll = data[8:]
+			#print("ifTWO")
 			for member in myList:
+				print("ifTWO")
 				member.send(replyAll)
 			break
 		else:
@@ -57,12 +60,13 @@ def clientthread(conn):
 #Now keep talking with the client
 while 1:
 	#Wait to accept a connection - blocking call
+	#conn is the socket used for sending and recieving
 	conn, addr = s.accept()
 	member = conn
 	myList = []
 	#display client information
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
-	myList.append(member)
+	myList.append(conn)
 	#start new thread takes 1st argument as a function name to be run,
 	#second is the tuple of arguments to the function.
 	start_new_thread(clientthread ,(conn,))
