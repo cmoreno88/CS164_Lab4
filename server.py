@@ -1,10 +1,10 @@
 #server.py file for CS164_Lab4
 import socket
 import sys
-from thread import *
+import _thread
 
 HOST = ''	#Symbolic name meaning all available interfaces
-PORT = 5089 	#Arbitrary non-privlidged port
+PORT = 8888 	#Arbitrary non-privlidged port
 
 #Creates socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -12,11 +12,11 @@ print ('Socket Created')
 
 try:	#binds a socket to a particular port
 	s.bind((HOST, PORT))
-except socket.error , msg:
+except socket.error as msg:
 	print('Bind Failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 	sys.exit()
 
-print 'Socket Bind Complete'
+print('Socket Bind Complete')
 
 #Allows 10 connections to wait to be connected too
 s.listen(10)
@@ -40,7 +40,9 @@ def clientthread(conn):
 			break
 			#conn.close()
 		elif data[:8] in s2:
-			conn.sendall(data[8:])
+			for member in myList:
+				member.sendall(data[8:])
+				break
 		else:
 			reply = 'OK...' + data
 			if not data:
@@ -54,15 +56,15 @@ def clientthread(conn):
 while 1:
 	#Wait to accept a connection - blocking call
 	conn, addr = s.accept()
-	client_dict = {}
+	member = conn
+	myList = []
 	#display client information
-	In[]
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
-	
+	myList.append(conn)
 	#start new thread takes 1st argument as a function name to be run,
 	#second is the tuple of arguments to the function.
-	start_new_thread(clientthread ,(conn,))
-	
+	#thread.start_new_thread(clientthread ,(conn,))
+	_thread.start_new_thread(clientthread ,(conn,))
 s.close()
 
 #Now keep talking with the client; NOW in the above loop
