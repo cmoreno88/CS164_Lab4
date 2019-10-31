@@ -65,9 +65,10 @@ while 1:
 	conn, addr = s.accept()
 	member = conn
 	myList = []
+	myList.append(member)
 	#display client information
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
-	myList.append(member)
+	#myList.append(member)
 	#start new thread takes 1st argument as a function name to be run,
 	#second is the tuple of arguments to the function.
 	start_new_thread(clientthread ,(conn,))
