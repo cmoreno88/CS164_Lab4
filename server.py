@@ -1,10 +1,11 @@
 #server.py file for CS164_Lab4
 import socket
 import sys
-import _thread
+#for windows, import _thread
+from thread import *
 
 HOST = ''	#Symbolic name meaning all available interfaces
-PORT = 8888 	#Arbitrary non-privlidged port
+PORT = 5095 	#Arbitrary non-privlidged port
 
 #Creates socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,13 +37,18 @@ def clientthread(conn):
 		s2 = "!sendall"
 		#Receiving from client
 		data = conn.recv(1024)
-		if data[:2] in s1:
+		if data[:2] == s1:
+			print("ifONE")
 			break
 			#conn.close()
-		elif data[:8] in s2:
+		elif data[:8] == s2:
+			replyAll = data[8:]
+			#print("ifTWO")
 			for member in myList:
-				member.sendall(data[8:])
-				break
+				print("ifTWO")#this is printing
+				member.sendall(replyAll)
+				#break; this one lets it keep running
+			#break; this one made it disconnet immediately
 		else:
 			reply = 'OK...' + data
 			if not data:
@@ -55,16 +61,18 @@ def clientthread(conn):
 #Now keep talking with the client
 while 1:
 	#Wait to accept a connection - blocking call
+	#conn is the socket used for sending and recieving
 	conn, addr = s.accept()
 	member = conn
 	myList = []
+	myList.append(member)
 	#display client information
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
-	myList.append(conn)
+	#myList.append(member)
 	#start new thread takes 1st argument as a function name to be run,
 	#second is the tuple of arguments to the function.
-	#thread.start_new_thread(clientthread ,(conn,))
-	_thread.start_new_thread(clientthread ,(conn,))
+	start_new_thread(clientthread ,(conn,))
+	#_thread.start_new_thread(clientthread ,(conn,))
 s.close()
 
 #Now keep talking with the client; NOW in the above loop
