@@ -59,13 +59,15 @@ def clientthread(conn):
 	conn.close()
 
 #Now keep talking with the client
+myList = []#you were redeclaring your list in the "while 1" loop
 while 1:
 	#Wait to accept a connection - blocking call
 	#conn is the socket used for sending and recieving
 	conn, addr = s.accept()
 	member = conn
-	myList = []
+	#myList = []
 	myList.append(member)
+	print(len(myList))
 	#display client information
 	print('Connected with ' + addr[0] + ':' + str(addr[1]))
 	#myList.append(member)
